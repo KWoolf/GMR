@@ -170,7 +170,7 @@
         "left_shoulder_yaw_link": [
             "LeftArm",
             0,
-            100,
+            10,
             [
                 0.0,
                 0.0,
@@ -218,7 +218,7 @@
         "right_shoulder_yaw_link": [
             "RightArm",
             0,
-            100,
+            10,
             [
                 0.0,
                 0.0,
@@ -412,7 +412,7 @@
         "left_shoulder_yaw_link": [
             "LeftArm",
             0,
-            100,
+            10,
             [
                 0.0,
                 0.0,
@@ -460,7 +460,7 @@
         "right_shoulder_yaw_link": [
             "RightArm",
             0,
-            100,
+            10,
             [
                 0.0,
                 0.0,

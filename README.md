@@ -377,6 +377,14 @@ uv run scripts/axis_bvh_to_robot.py --bvh_file <path_to_bvh_data> --robot unitre
 - Axis Studio rounds `Frame Time` to three decimals, so the loader snaps it to the nearest Perception Neuron capture rate (for example 0.008 s is read as 120 Hz). Pass `--source_fps` to set it explicitly.
 - `--headless` skips the interactive viewer, and `--video_path` renders the result offscreen to a video file.
 
+To prepare a retargeted take for motion-tracking training in [unitree_rl_mjlab](https://github.com/KWoolf/unitree_rl_mjlab), clean it and export it as CSV:
+
+```bash
+uv run scripts/robot_motion_to_csv.py --motion_file <path_to_robot_data.pkl> --csv_path <path_to_csv>
+```
+
+This limits joint velocities to 80% of the motor limits in the robot's URDF (removing single-frame IK branch switches) and raises the root on frames where a foot goes below the floor.
+
 The R1 model (`assets/unitree_r1/r1_mocap_26dof.xml`, 26 DoF including the two head joints) is generated from Unitree's URDF with `python assets/unitree_r1/build_r1_mjcf.py`.
 
 
