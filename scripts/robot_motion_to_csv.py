@@ -93,6 +93,15 @@ if __name__ == "__main__":
         default=0.0,
         help="Height above the floor to keep the lowest foot point at, in metres.",
     )
+    parser.add_argument(
+        "--segment",
+        nargs=2,
+        type=float,
+        action="append",
+        metavar=("START", "END"),
+        help="Export only this time range, in seconds of the take. Repeat to export "
+        "several segments; each is written to <csv_path stem>_<start>-<end>s.csv.",
+    )
     args = parser.parse_args()
 
     with open(args.motion_file, "rb") as f:
@@ -136,8 +145,30 @@ if __name__ == "__main__":
         f"root raised on {int((lift > 1e-4).sum())} frames by up to {lift.max() * 100:.1f} cm"
     )
 
+    # Segments are cut after cleaning so the velocity limit and ground
+    # correction see the motion on both sides of each cut.
     csv = np.concatenate([root_pos, root_rot_xyzw, dof_pos], axis=1)
+    duration = (len(csv) - 1) / fps
+    outputs = []
+    if args.segment is None:
+        outputs.append((args.csv_path, csv))
+    else:
+        stem, ext = os.path.splitext(args.csv_path)
+        for start, end in args.segment:
+            if not 0.0 <= start < end <= duration + 1e-9:
+                raise ValueError(
+                    f"Segment {start}-{end} s is outside the take (0-{duration:.2f} s)"
+                )
+            first = int(round(start * fps))
+            last = int(round(end * fps))
+            outputs.append(
+                (f"{stem}_{start:g}-{end:g}s{ext or '.csv'}", csv[first : last + 1])
+            )
+
     os.makedirs(os.path.dirname(args.csv_path) or ".", exist_ok=True)
-    np.savetxt(args.csv_path, csv, delimiter=",", fmt="%.6f")
-    print(f"Saved {len(csv)} frames at {fps:g} fps to {args.csv_path}")
+    for path, rows in outputs:
+        np.savetxt(path, rows, delimiter=",", fmt="%.6f")
+        print(
+            f"Saved {len(rows)} frames ({(len(rows) - 1) / fps:.2f} s) at {fps:g} fps to {path}"
+        )
     print("Joint order: " + ", ".join(joint_names))
