@@ -385,7 +385,11 @@ uv run scripts/robot_motion_to_csv.py --motion_file <path_to_robot_data.pkl> --c
 
 This limits joint velocities to 80% of the motor limits in the robot's URDF (removing single-frame IK branch switches) and raises the root on frames where a foot goes below the floor.
 
-To train on parts of a take, add `--segment START END` (in seconds) once per segment, for example `--segment 12.5 31 --segment 48 60`. Each segment is written to its own CSV named `<csv_path stem>_<start>-<end>s.csv`.
+To train on parts of a take, add `--segment START END` (in seconds) once per segment, for example `--segment 12.5 31 --segment 48 60`. Each segment is written to its own CSV named `<csv_path stem>_<start>-<end>s.csv`. To watch a CSV before training, pass it to the motion player (`--csv_fps` defaults to 50):
+
+```bash
+uv run scripts/vis_robot_motion.py --robot unitree_r1 --robot_motion_path <path_to_csv>
+```
 
 The R1 model (`assets/unitree_r1/r1_mocap_26dof.xml`, 26 DoF including the two head joints) is generated from Unitree's URDF with `python assets/unitree_r1/build_r1_mjcf.py`.
 
