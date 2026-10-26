@@ -113,9 +113,7 @@ def load_axis_bvh_file(bvh_file, target_fps=None, source_fps=None):
     basis = R.from_matrix(AXIS_TO_GMR)
     basis_quat = basis.as_quat(scalar_first=True)
     basis_inv_quat = basis.inv().as_quat(scalar_first=True)
-    global_rot = utils.quat_mul(
-        utils.quat_mul(basis_quat, global_rot), basis_inv_quat
-    )
+    global_rot = utils.quat_mul(utils.quat_mul(basis_quat, global_rot), basis_inv_quat)
     global_pos = global_pos @ AXIS_TO_GMR.T / 100.0  # cm to m
 
     frames = []
@@ -131,4 +129,3 @@ def load_axis_bvh_file(bvh_file, target_fps=None, source_fps=None):
     human_height = (head_top - sole) / 100.0  # cm to m
 
     return frames, human_height, fps
-
