@@ -65,6 +65,8 @@ def read_bvh(filename, start=None, end=None, order=None):
     # Parse the  file, line by line
     for line in f:
 
+        # Axis Neuron can write a blank line between MOTION and Frames.
+        if not line.strip(): continue
         if "HIERARCHY" in line: continue
         if "MOTION" in line: continue
 

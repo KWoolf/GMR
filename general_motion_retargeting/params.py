@@ -12,6 +12,7 @@ ROBOT_XML_DICT = {
     "unitree_h1": ASSET_ROOT / "unitree_h1" / "h1.xml",
     "unitree_h1_2": ASSET_ROOT / "unitree_h1_2" / "h1_2_handless.xml",
     "unitree_h2": ASSET_ROOT / "unitree_h2" / "h2_mocap.xml",
+    "unitree_r1": ASSET_ROOT / "unitree_r1" / "r1_mocap_26dof.xml",
     "booster_t1": ASSET_ROOT / "booster_t1" / "T1_serial.xml",
     "booster_t1_29dof": ASSET_ROOT / "booster_t1_29dof" / "t1_mocap.xml",
     "stanford_toddy": ASSET_ROOT / "stanford_toddy" / "toddy_mocap.xml",
@@ -65,6 +66,9 @@ IK_CONFIG_DICT = {
     "bvh_nokov": {
         "unitree_g1": IK_CONFIG_ROOT / "bvh_nokov_to_g1.json",
     },
+    "bvh_axis": {
+        "unitree_r1": IK_CONFIG_ROOT / "bvh_axis_to_r1.json",
+    },
     "bvh_xsens": {
         "unitree_g1": IK_CONFIG_ROOT / "bvh_xsens_to_g1.json",
         "unitree_h1_2": IK_CONFIG_ROOT / "bvh_xsens_to_h1_2.json",
@@ -91,6 +95,7 @@ ROBOT_BASE_DICT = {
     "unitree_h1": "pelvis",
     "unitree_h1_2": "pelvis",
     "unitree_h2": "pelvis",
+    "unitree_r1": "pelvis",
     "booster_t1": "Waist",
     "booster_t1_29dof": "Waist",
     "stanford_toddy": "waist_link",
@@ -113,6 +118,7 @@ VIEWER_CAM_DISTANCE_DICT = {
     "unitree_h1": 3.0,
     "unitree_h1_2": 3.0,
     "unitree_h2": 3.0,
+    "unitree_r1": 2.0,
     "booster_t1": 2.0,
     "booster_t1_29dof": 2.0,
     "stanford_toddy": 1.0,
