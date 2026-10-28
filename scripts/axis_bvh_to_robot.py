@@ -10,7 +10,7 @@ from tqdm import tqdm
 
 from general_motion_retargeting import IK_CONFIG_DICT, ROBOT_XML_DICT
 from general_motion_retargeting import GeneralMotionRetargeting as GMR
-from general_motion_retargeting.utils.axis_studio import load_axis_bvh_file
+from general_motion_retargeting.utils.axis_neuron import load_axis_bvh_file
 
 
 def render_video(robot, qpos_list, fps, video_path, width=640, height=480):
@@ -41,11 +41,11 @@ if __name__ == "__main__":
     HERE = pathlib.Path(__file__).parent
 
     parser = argparse.ArgumentParser(
-        description="Retarget a BVH file exported from Noitom Axis Studio to a robot."
+        description="Retarget a BVH file exported from Noitom Axis Neuron to a robot."
     )
     parser.add_argument(
         "--bvh_file",
-        help="BVH motion file exported from Axis Studio.",
+        help="BVH motion file exported from Axis Neuron.",
         required=True,
         type=str,
     )

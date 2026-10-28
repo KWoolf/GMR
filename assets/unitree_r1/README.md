@@ -8,9 +8,9 @@
 python assets/unitree_r1/build_r1_mjcf.py
 ```
 
-## Axis Studio IK config
+## Axis Neuron IK config
 
-`general_motion_retargeting/ik_configs/bvh_axis_to_r1.json` maps the Axis Studio skeleton to the R1. The Axis Studio loader returns every bone with the identity orientation in the rest T-pose, so each rotation offset in the config is the orientation of the robot link when the robot stands in the matching T-pose. Legs, pelvis, torso and head links are world-aligned at the zero pose, so their offsets are the identity. The arm offsets come from this T-pose, with the arm reaching sideways and the elbow as straight as the R1 geometry allows (about 32 degrees short of straight between joint origins):
+`general_motion_retargeting/ik_configs/bvh_axis_to_r1.json` maps the Axis Neuron skeleton to the R1. The Axis Neuron loader returns every bone with the identity orientation in the rest T-pose, so each rotation offset in the config is the orientation of the robot link when the robot stands in the matching T-pose. Legs, pelvis, torso and head links are world-aligned at the zero pose, so their offsets are the identity. The arm offsets come from this T-pose, with the arm reaching sideways and the elbow as straight as the R1 geometry allows (about 32 degrees short of straight between joint origins):
 
 | joint | left | right |
 | --- | --- | --- |

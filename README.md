@@ -365,16 +365,16 @@ By default there is no visualization for batch retargeting.
 
 
 
-## Retargeting from Axis Studio BVH (Perception Neuron) to Robot
+## Retargeting from Axis Neuron BVH (Perception Neuron) to Robot
 
-Export the take from Axis Studio as BVH (Y-up, centimetres, the default T-pose rest skeleton) and retarget it to the Unitree R1:
+Export the take from Axis Neuron as BVH (Y-up, centimetres, the default T-pose rest skeleton) and retarget it to the Unitree R1:
 
 ```bash
 uv run scripts/axis_bvh_to_robot.py --bvh_file <path_to_bvh_data> --robot unitree_r1 --save_path <path_to_save_robot_data.pkl> --rate_limit
 ```
 
 - The capture is resampled to `--motion_fps` (default 50) before retargeting.
-- Axis Studio rounds `Frame Time` to three decimals, so the loader snaps it to the nearest Perception Neuron capture rate (for example 0.008 s is read as 120 Hz). Pass `--source_fps` to set it explicitly.
+- Axis Neuron rounds `Frame Time` to three decimals, so the loader snaps it to the nearest Perception Neuron capture rate (for example 0.008 s is read as 120 Hz). Pass `--source_fps` to set it explicitly.
 - `--headless` skips the interactive viewer, and `--video_path` renders the result offscreen to a video file.
 
 To prepare a retargeted take for motion-tracking training in [unitree_rl_mjlab](https://github.com/KWoolf/unitree_rl_mjlab), clean it and export it as CSV:

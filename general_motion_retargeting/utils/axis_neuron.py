@@ -1,6 +1,6 @@
-"""Loader for BVH files exported from Noitom Axis Studio (Perception Neuron).
+"""Loader for BVH files exported from Noitom Axis Neuron (Perception Neuron).
 
-Axis Studio exports a Y-up skeleton in centimetres that faces +Z in its rest
+Axis Neuron exports a Y-up skeleton in centimetres that faces +Z in its rest
 T-pose, with every bone's rest orientation equal to the identity. This loader
 converts it to GMR's Z-up, X-forward world in metres and conjugates the
 orientations by the same change of basis, so each bone's orientation is still
@@ -18,11 +18,11 @@ from scipy.spatial.transform import Slerp
 import general_motion_retargeting.utils.lafan_vendor.utils as utils
 from general_motion_retargeting.utils.lafan_vendor.extract import read_bvh
 
-# Axis Studio (x: left, y: up, z: forward) -> GMR (x: forward, y: left, z: up)
+# Axis Neuron (x: left, y: up, z: forward) -> GMR (x: forward, y: left, z: up)
 AXIS_TO_GMR = np.array([[0, 0, 1], [1, 0, 0], [0, 1, 0]], dtype=float)
 
 
-# Axis Studio writes Frame Time rounded to three decimals, so 120 Hz appears as
+# Axis Neuron writes Frame Time rounded to three decimals, so 120 Hz appears as
 # 0.008 s (125 Hz). Snap to the nearest rate the Perception Neuron hardware
 # records at.
 NEURON_CAPTURE_RATES = (60.0, 90.0, 96.0, 100.0, 120.0, 240.0)
@@ -87,7 +87,7 @@ def _resample(quats, pos, src_fps, tgt_fps):
 
 def load_axis_bvh_file(bvh_file, target_fps=None, source_fps=None):
     """
-    Load an Axis Studio BVH export.
+    Load an Axis Neuron BVH export.
 
     Returns (frames, human_height, fps), where frames is a list of
     {bone_name: [position, orientation_wxyz]} dictionaries in GMR's world
