@@ -1,4 +1,5 @@
 import argparse
+import json
 import os
 import pathlib
 import pickle
@@ -104,10 +105,16 @@ if __name__ == "__main__":
         f"performer height {actual_human_height:.3f} m"
     )
 
+    # GMR multiplies the config's scale table by actual / assumed height, which
+    # shrinks a shorter performer a second time. Passing assumed^2 / actual
+    # makes that factor assumed / actual instead, so the scaled motion is the
+    # same size whatever stature the Axis Neuron skeleton was calibrated to.
+    with open(IK_CONFIG_DICT["bvh_axis"][args.robot]) as f:
+        assumed_height = json.load(f)["human_height_assumption"]
     retargeter = GMR(
         src_human="bvh_axis",
         tgt_robot=args.robot,
-        actual_human_height=actual_human_height,
+        actual_human_height=assumed_height**2 / actual_human_height,
     )
 
     # Start the solver at the performer's heading on the first frame. From the
