@@ -3,7 +3,14 @@ import json
 import os
 import pathlib
 import pickle
+import sys
 import time
+
+# Render headless videos on the NVIDIA GPU through EGL. MuJoCo reads MUJOCO_GL
+# when it is first imported, so this has to run before the GMR imports below.
+# Set MUJOCO_GL=osmesa to render on a machine without an NVIDIA driver.
+if "--headless" in sys.argv:
+    os.environ.setdefault("MUJOCO_GL", "egl")
 
 import numpy as np
 from rich import print
@@ -28,7 +35,7 @@ def render_video(robot, qpos_list, fps, video_path, width=640, height=480):
     camera.azimuth = 150
     os.makedirs(os.path.dirname(video_path) or ".", exist_ok=True)
     writer = imageio.get_writer(video_path, fps=fps)
-    for qpos in qpos_list:
+    for qpos in tqdm(qpos_list, desc="Rendering video"):
         data.qpos[:] = qpos
         mj.mj_forward(model, data)
         camera.lookat[:] = data.qpos[:3]
