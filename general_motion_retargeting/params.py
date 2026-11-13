@@ -80,6 +80,9 @@ IK_CONFIG_DICT = {
     "fbx_offline": {
         "unitree_g1": IK_CONFIG_ROOT / "fbx_offline_to_g1.json",
     },
+    "om_fbx": {
+        "unitree_r1": IK_CONFIG_ROOT / "om_fbx_to_r1.json",
+    },
     "xrobot": {
         "unitree_g1": IK_CONFIG_ROOT / "xrobot_to_g1.json",
     },
