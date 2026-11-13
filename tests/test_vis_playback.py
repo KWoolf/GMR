@@ -1,12 +1,6 @@
-"""Playback controls of scripts/vis_robot_motion.py, without a viewer."""
+"""Playback controls used by scripts/vis_robot_motion.py, without a viewer."""
 
-import importlib.util
-import pathlib
-
-SCRIPT = pathlib.Path(__file__).parents[1] / "scripts" / "vis_robot_motion.py"
-spec = importlib.util.spec_from_file_location("vis_robot_motion", SCRIPT)
-vis = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(vis)
+from general_motion_retargeting import playback as vis
 
 
 def test_pause_step_and_segments():
