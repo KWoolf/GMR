@@ -1,12 +1,34 @@
+"""Play a retargeted robot motion, with a frame counter and segment marking.
+
+Keys in the viewer window:
+
+    Space          pause or resume
+    Left / Right   step one frame back or forward (pauses playback)
+    Up / Down      jump one second forward or back
+    Home           mark the current frame as the start of a segment
+    End            mark the current frame as the end of the segment
+
+Letter keys are left alone because MuJoCo's viewer already uses them to
+toggle its visualisation options. Each segment closed with End is printed with its frames and times, and on exit
+the script prints a robot_motion_to_csv.py command that exports every marked
+segment. Frame numbers count from 0 in the file being played, so mark segments
+on the full-take pickle (or its full CSV) for the times to match the export.
+"""
+
 import argparse
 import os
 
 import numpy as np
 
 from general_motion_retargeting import RobotMotionViewer, load_robot_motion
+from general_motion_retargeting.playback import Playback
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        description=__doc__.splitlines()[0],
+        epilog=__doc__.split("\n", 2)[2],
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     parser.add_argument("--robot", type=str, default="unitree_g1")
 
     parser.add_argument(
@@ -20,6 +42,11 @@ if __name__ == "__main__":
         type=float,
         default=50.0,
         help="Frame rate of a CSV motion file (CSV files do not store it).",
+    )
+    parser.add_argument(
+        "--no_frame_counter",
+        action="store_true",
+        help="Do not draw the frame counter in the viewer window.",
     )
 
     parser.add_argument("--record_video", action="store_true")
@@ -51,23 +78,33 @@ if __name__ == "__main__":
             motion_link_body_list,
         ) = load_robot_motion(robot_motion_path)
 
+    playback = Playback(len(motion_root_pos), motion_fps)
+
     env = RobotMotionViewer(
         robot_type=robot_type,
         motion_fps=motion_fps,
         camera_follow=False,
         record_video=args.record_video,
         video_path=args.video_path,
+        keyboard_callback=playback.on_key,
     )
 
-    frame_idx = 0
-    while True:
-        env.step(
-            motion_root_pos[frame_idx],
-            motion_root_rot[frame_idx],
-            motion_dof_pos[frame_idx],
-            rate_limit=True,
-        )
-        frame_idx += 1
-        if frame_idx >= len(motion_root_pos):
-            frame_idx = 0
-    env.close()
+    try:
+        while env.viewer.is_running():
+            frame_idx = playback.advance()
+            env.step(
+                motion_root_pos[frame_idx],
+                motion_root_rot[frame_idx],
+                motion_dof_pos[frame_idx],
+                rate_limit=True,
+                overlay_text=None
+                if args.no_frame_counter
+                else playback.overlay(frame_idx),
+            )
+    except KeyboardInterrupt:
+        pass
+    finally:
+        if playback.segments:
+            print("Export the marked segments with:")
+            print(playback.export_command(robot_motion_path, robot_type))
+        env.close()

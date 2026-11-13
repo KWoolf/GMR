@@ -118,6 +118,8 @@ class RobotMotionViewer:
         # rate limit
         rate_limit=True,
         follow_camera=True,
+        # text drawn in the top-left corner of the viewer window
+        overlay_text=None,
     ):
         """
         by default visualize robot motion.
@@ -154,6 +156,16 @@ class RobotMotionViewer:
                     pos_offset=human_pos_offset,
                     joint_name=human_body_name if show_human_body_name else None,
                 )
+
+        if overlay_text is not None:
+            self.viewer.set_texts(
+                (
+                    mj.mjtFontScale.mjFONTSCALE_150,
+                    mj.mjtGridPos.mjGRID_TOPLEFT,
+                    overlay_text,
+                    "",
+                )
+            )
 
         self.viewer.sync()
         if rate_limit is True:
