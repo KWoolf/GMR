@@ -20,3 +20,16 @@ python assets/unitree_r1/build_r1_mjcf.py
 | elbow | 1.2739 | 1.2739 |
 
 The scale table is the ratio of robot to human distances from the pelvis for each matched body, for a 1.73 m performer; other performers are scaled by their stature, which the loader reads from the BVH rest skeleton.
+
+## Organic Motion FBX (OM_fbx) IK config
+
+`general_motion_retargeting/ik_configs/om_fbx_to_r1.json` maps the Organic Motion FBX skeleton to the R1. FBX files are read by `general_motion_retargeting/utils/fbx_reader.py`, a small binary FBX parser that does not need the Autodesk FBX SDK, and `general_motion_retargeting/utils/om_fbx.py` turns them into GMR frames. Organic Motion uses the same axes as Axis Neuron (Y up, facing +Z, left on +X, centimetres) and stores a T-pose as the bind pose, so the loader expresses every bone relative to that T-pose and the rotation offsets are the same as in the Axis Neuron config. Spine1 (the chest) drives the waist and Ankle_Left/Right drive the ankles. The capture has no wrist rotation, so the hand targets only keep the wrist roll aligned with the forearm.
+
+The scale table is the ratio of robot to human distances from the pelvis in the T-pose, for the 1.595 m skeleton (skull end node to foot nodes) in the reference capture; the hips entry is the ratio of pelvis heights. Retarget with:
+
+```bash
+python scripts/fbx_offline_to_robot.py --motion_file <file.fbx> --motion_fps 50 \
+    --save_path <out.pkl> --video_path <out.mp4> --headless
+```
+
+`--start` and `--end` (seconds) trim the capture before retargeting.
